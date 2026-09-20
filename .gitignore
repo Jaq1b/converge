@@ -1,0 +1,7 @@
+node_modules/
+npm-debug.log*
+.DS_Store
+.env
+
+# Long-form design notes, kept local
+.design-notes.md
