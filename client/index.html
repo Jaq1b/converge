@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Converge — collaborative editor on an RGA CRDT</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23f3f1ec'/><rect x='13' y='13' width='6' height='6' fill='%23a33a25'/></svg>"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Converge</h1>
+
+      <div class="header-right">
+        <input
+          id="room-input"
+          type="text"
+          spellcheck="false"
+          autocomplete="off"
+          aria-label="Room name"
+        />
+        <div id="peer-list" class="peers" title="Replicas in this room"></div>
+        <div id="status" class="status status-connecting">
+          <span class="signal" aria-hidden="true"></span>
+          <span id="status-text">connecting</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="sheet">
+        <textarea
+          id="editor"
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+          placeholder="Type here. Open a second tab in the same room to watch two replicas converge."
+        ></textarea>
+        <div id="cursor-layer" class="cursor-layer" aria-hidden="true"></div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="actions">
+        <button id="undo-btn" type="button" title="Undo (Cmd/Ctrl+Z)" disabled>Undo</button>
+        <button id="redo-btn" type="button" title="Redo (Cmd/Ctrl+Shift+Z)" disabled>Redo</button>
+        <button id="offline-btn" type="button" title="Simulate losing the network">
+          Go offline
+        </button>
+      </div>
+
+      <p class="stats">
+        <span class="stat"><span id="stat-replica">&mdash;</span></span>
+        <span class="stat"><span id="stat-chars">0</span> chars</span>
+        <span
+          class="stat optional"
+          title="Deleted characters kept as anchors for concurrent inserts"
+        >
+          <span id="stat-tombstones">0</span> tombstones
+        </span>
+        <span class="stat optional"><span id="stat-ops">0</span> ops</span>
+        <span id="queue-badge" class="stat queued hidden">0 queued</span>
+        <span id="pending-wrap" class="stat queued hidden">
+          <span id="stat-pending">0</span> buffered
+        </span>
+      </p>
+    </footer>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
