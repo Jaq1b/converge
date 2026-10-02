@@ -51,16 +51,19 @@ footer {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 11px 18px;
   flex: 0 0 auto;
   flex-wrap: wrap;
 }
 
 header {
+  padding: 10px 18px;
   border-bottom: 1px solid var(--rule);
 }
 
+/* A little more air than the header: the footer carries the small print, and
+   matching them exactly made the two bands read as a mirror. */
 footer {
+  padding: 13px 18px 14px;
   border-top: 1px solid var(--rule);
 }
 
@@ -68,6 +71,7 @@ h1 {
   margin: 0;
   font-size: 12.5px;
   font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .header-right {
@@ -155,7 +159,11 @@ main {
   position: relative;
   display: flex;
   width: 100%;
-  max-width: 84ch;
+  /* 74 characters of text plus the editor's side padding. font-size is set here
+     only so `ch` resolves against the editor's 13.5px rather than the 12.5px of
+     the surrounding chrome; both children declare their own size anyway. */
+  font-size: 13.5px;
+  max-width: calc(74ch + 60px);
   background: var(--sheet);
   border-left: 1px solid var(--rule);
   border-right: 1px solid var(--rule);
@@ -166,10 +174,13 @@ main {
    remote carets drift. Keep these declarations in sync. */
 #editor,
 .cursor-layer {
-  padding: 26px 26px;
+  /* Unequal on purpose, the way a page is set: the text block sits high, with
+     the deepest margin at the foot so the last line never looks pinned to the
+     footer rule. */
+  padding: 34px 30px 56px;
   font-family: var(--mono);
   font-size: 13.5px;
-  line-height: 1.7;
+  line-height: 1.65;
   tab-size: 2;
   white-space: pre-wrap;
   overflow-wrap: break-word;
@@ -324,6 +335,6 @@ button.engaged {
 
   #editor,
   .cursor-layer {
-    padding: 18px 16px;
+    padding: 22px 17px 40px;
   }
 }
