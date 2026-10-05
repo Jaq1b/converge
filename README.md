@@ -21,7 +21,7 @@ npm test           # 57 tests
 - **Op log** (`crdt/oplog.js`): every local edit is appended and held in an outbox
   until the server acknowledges it. Acks are matched by operation id, never by
   count or position, since they can arrive twice or out of order.
-- **Undo** (`client/undo.js`): stores operation ids and undoes by emitting inverse
+- **Undo** (`docs/undo.js`): stores operation ids and undoes by emitting inverse
   operations, so it stays correct while other people are editing.
 - **Relay** (`server/`): keeps an append-only list of opaque JSON per room,
   replays it to whoever joins, forwards new ops to everyone else. It never parses

@@ -55,7 +55,7 @@ const MIME = {
 
 // Only these directories are reachable over HTTP, so the server can't be talked
 // into serving node_modules, .env, or a stray dotfile.
-const SERVE_DIRS = ['client', 'crdt'];
+const SERVE_DIRS = ['docs', 'crdt'];
 
 const SECURITY_HEADERS = {
   'x-content-type-options': 'nosniff',
@@ -86,13 +86,13 @@ function resolveStatic(urlPath) {
   }
   if (clean.includes('\0')) return null;
 
-  const rel = clean === '/' ? 'client/index.html' : clean.replace(/^\/+/, '');
+  const rel = clean === '/' ? 'docs/index.html' : clean.replace(/^\/+/, '');
 
-  // Try the path as written, then inside client/. The index page is served at
+  // Try the path as written, then inside docs/. The index page is served at
   // `/`, so its relative asset links resolve to `/main.js`; falling back to
-  // client/ makes those work without hard-coding absolute paths into the HTML,
-  // which would break a static host that serves client/ as its web root.
-  for (const candidate of [rel, path.join('client', rel)]) {
+  // docs/ makes those work without hard-coding absolute paths into the HTML,
+  // which would break a static host that serves docs/ as its web root.
+  for (const candidate of [rel, path.join('docs', rel)]) {
     const abs = path.resolve(ROOT, candidate);
     // Resolve first, then check: this rejects `..` traversal after
     // normalisation rather than trying to pattern-match it beforehand.

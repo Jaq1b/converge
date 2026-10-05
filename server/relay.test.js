@@ -46,7 +46,7 @@ async function waitFor(predicate, { timeout = 3000, label = 'condition' } = {}) 
 }
 
 /**
- * A client with exactly the plumbing client/main.js has: a document, an op log
+ * A client with exactly the plumbing docs/main.js has: a document, an op log
  * with an outbox, and the same tiny wire protocol.
  */
 function makeClient(port, room, id) {
