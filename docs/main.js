@@ -71,17 +71,46 @@ export function colorFor(replicaId) {
   return PEER_COLORS[hash % PEER_COLORS.length];
 }
 
-function randomReplicaId() {
+function randomId(length) {
   const alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  const bytes = crypto.getRandomValues(new Uint8Array(6));
+  const bytes = crypto.getRandomValues(new Uint8Array(length));
   let out = '';
   for (const b of bytes) out += alphabet[b % alphabet.length];
   return out;
 }
 
+const randomReplicaId = () => randomId(6);
+
+/* Longer than a replica id: a room name is a capability, so it should not be
+   guessable by anyone poking at short strings. */
+const randomRoomName = () => randomId(12);
+
+function sanitizeRoom(value) {
+  return String(value ?? '')
+    .replace(/[^a-zA-Z0-9_-]/g, '')
+    .slice(0, 40);
+}
+
+/** Keep other query params (`?server=` for split hosting) when the room changes. */
+function writeRoomToUrl(room, { reload } = {}) {
+  const params = new URLSearchParams(location.search);
+  params.set('room', room);
+  const next = `${location.pathname}?${params.toString()}${location.hash}`;
+  if (reload) location.assign(next);
+  else history.replaceState(null, '', next);
+}
+
 function roomFromUrl() {
-  const fromQuery = new URLSearchParams(location.search).get('room');
-  return (fromQuery || 'demo').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40) || 'demo';
+  const asked = sanitizeRoom(new URLSearchParams(location.search).get('room'));
+  if (asked) return asked;
+
+  // Nobody asked for a room, so invent a private one. A shared default would
+  // put every first-time visitor in the same document: two recruiters opening
+  // the live demo at once would type over each other. Writing it back to the
+  // address bar keeps the URL copyable, so a second tab can still join.
+  const fresh = randomRoomName();
+  writeRoomToUrl(fresh);
+  return fresh;
 }
 
 // -------------------------------------------------------------- the editor ---
@@ -96,6 +125,7 @@ function init() {
     undoBtn: document.getElementById('undo-btn'),
     redoBtn: document.getElementById('redo-btn'),
     offlineBtn: document.getElementById('offline-btn'),
+    waking: document.getElementById('waking'),
     queueBadge: document.getElementById('queue-badge'),
     pendingWrap: document.getElementById('pending-wrap'),
     peerList: document.getElementById('peer-list'),
@@ -375,6 +405,28 @@ function init() {
 
   // -------------------------------------------------------------- network ---
 
+  /* A free host sleeps when idle and takes most of a minute to answer the first
+     request. Without a word of explanation that reads as a broken page, so say
+     what is happening. Delayed rather than immediate: against a warm server the
+     socket opens in milliseconds, and a notice that flashes up and vanishes is
+     worse than none at all.
+
+     Kept up across reconnect attempts: a cold start fails the first socket,
+     goes offline, then retries, and hiding on each failure would make the
+     banner flicker for half a minute. */
+  let wakingTimer = null;
+
+  function showWakingNotice() {
+    if (wakingTimer !== null) return; // Already counting down, or already shown.
+    wakingTimer = setTimeout(() => el.waking.classList.remove('hidden'), 1500);
+  }
+
+  function hideWakingNotice() {
+    clearTimeout(wakingTimer);
+    wakingTimer = null;
+    el.waking.classList.add('hidden');
+  }
+
   const connection = new Connection({
     room,
     replica: replicaId,
@@ -399,6 +451,8 @@ function init() {
       el.status.className = `status status-${status}`;
       el.statusText.textContent = label;
       document.body.classList.toggle('is-offline', status === Status.OFFLINE);
+      if (status === Status.ONLINE || connection?.simulatedOffline) hideWakingNotice();
+      else showWakingNotice();
       if (status === Status.ONLINE) sendPresence();
       refreshStats();
     },
@@ -439,10 +493,15 @@ function init() {
   });
 
   el.room.addEventListener('change', () => {
-    const next = el.room.value.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40) || 'demo';
-    location.search = `?room=${encodeURIComponent(next)}`;
+    // Clearing the field earns a fresh private room, not a shared default.
+    const next = sanitizeRoom(el.room.value) || randomRoomName();
+    writeRoomToUrl(next, { reload: true });
   });
 
+  // Started here rather than from onStatus: the connection is constructed
+  // already in the connecting state, so setStatus('connecting') is a no-op and
+  // never reaches the callback on this first attempt.
+  showWakingNotice();
   connection.connect();
   renderPeers();
   render();

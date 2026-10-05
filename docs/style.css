@@ -43,7 +43,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* --------------------------------------------------------------- bands --- */
+/* ---------------------------------------------------------------- bands --- */
 
 header,
 footer {
@@ -95,7 +95,7 @@ h1 {
   border-bottom-color: var(--ink);
 }
 
-/* -------------------------------------------------------------- status --- */
+/* --------------------------------------------------------------- status --- */
 
 .status {
   display: flex;
@@ -124,7 +124,7 @@ h1 {
   color: var(--fault);
 }
 
-/* --------------------------------------------------------------- peers --- */
+/* ---------------------------------------------------------------- peers --- */
 
 .peers {
   display: flex;
@@ -144,7 +144,7 @@ h1 {
   box-shadow: inset 0 0 0 1.5px var(--ink);
 }
 
-/* -------------------------------------------------------------- editor --- */
+/* --------------------------------------------------------------- editor --- */
 
 main {
   flex: 1;
@@ -212,6 +212,23 @@ body.is-offline .sheet {
   border-right-color: rgba(163, 58, 37, 0.4);
 }
 
+/* -------------------------------------------------------- waking notice --- */
+
+/* Absolutely positioned so it cannot disturb the editor's text metrics, which
+   the caret overlay has to match exactly. */
+.waking {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 9px 30px;
+  border-bottom: 1px solid rgba(138, 106, 28, 0.35);
+  background: #faf4e6;
+  color: var(--wait);
+  pointer-events: none;
+}
+
 /* -------------------------------------------------------- remote carets --- */
 
 /* The overlay holds a transparent copy of the document, so the browser's own
@@ -254,7 +271,7 @@ body.is-offline .sheet {
   background: var(--peer-color, var(--ink));
 }
 
-/* ------------------------------------------------------------- actions --- */
+/* -------------------------------------------------------------- actions --- */
 
 .actions {
   display: flex;
@@ -293,7 +310,7 @@ button.engaged {
   color: var(--fault);
 }
 
-/* --------------------------------------------------------------- stats --- */
+/* ---------------------------------------------------------------- stats --- */
 
 /* Each stat is one element containing its own number and word, so hiding one on
    a narrow screen can't leave an orphaned label behind. */
@@ -321,7 +338,7 @@ button.engaged {
   display: none;
 }
 
-/* --------------------------------------------------------- narrow view --- */
+/* ---------------------------------------------------------- narrow view --- */
 
 @media (max-width: 700px) {
   .stat.optional {
