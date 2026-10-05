@@ -55,7 +55,7 @@ const MIME = {
 
 // Only these directories are reachable over HTTP, so the server can't be talked
 // into serving node_modules, .env, or a stray dotfile.
-const SERVE_DIRS = ['docs', 'crdt'];
+const SERVE_DIRS = ['docs'];
 
 const SECURITY_HEADERS = {
   'x-content-type-options': 'nosniff',

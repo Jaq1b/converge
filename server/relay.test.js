@@ -1,7 +1,7 @@
 /**
  * End-to-end tests through the real WebSocket relay.
  *
- * The tests in crdt/rga.test.js prove the *algorithm* converges. These prove the
+ * The tests in docs/crdt/rga.test.js prove the *algorithm* converges. These prove the
  * *system* does: real sockets, real JSON serialisation, real late joiners, real
  * disconnects. Every client here drives the same RGA and OpLog the browser does,
  * so the only thing not exercised is the DOM wiring.
@@ -12,8 +12,8 @@
 
 import assert from 'node:assert/strict';
 import WebSocket from 'ws';
-import { RGA } from '../crdt/rga.js';
-import { OpLog } from '../crdt/oplog.js';
+import { RGA } from '../docs/crdt/rga.js';
+import { OpLog } from '../docs/crdt/oplog.js';
 import { createRelay } from './index.js';
 
 export const tests = [];

@@ -43,7 +43,7 @@ export class Connection {
    * @param {object} options
    * @param {string} options.room
    * @param {string} options.replica
-   * @param {import('../crdt/oplog.js').OpLog} options.oplog
+   * @param {import('./crdt/oplog.js').OpLog} options.oplog
    * @param {(ops: object[]) => void} options.onOps      remote ops to apply
    * @param {(status: string) => void} options.onStatus
    * @param {(peers: object[]) => void} options.onPeers

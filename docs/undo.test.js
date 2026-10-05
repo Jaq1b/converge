@@ -4,8 +4,8 @@
  */
 
 import assert from 'node:assert/strict';
-import { RGA } from '../crdt/rga.js';
-import { OpLog } from '../crdt/oplog.js';
+import { RGA } from './crdt/rga.js';
+import { OpLog } from './crdt/oplog.js';
 import { UndoManager } from './undo.js';
 
 export const tests = [];
