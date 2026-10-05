@@ -15,6 +15,9 @@ npm test           # 57 tests
 
 ## What everything does
 
+The browser client lives in `docs/`, the relay in `server/`, and the merge engine
+in `crdt/`, which both of the others import.
+
 - **CRDT** (`crdt/rga.js`): a flat array of character nodes, each with a Lamport
   id and an anchor saying which character it was inserted after. One insertion
   scan resolves concurrent edits. Deletes are logical. ~350 lines, no deps.
