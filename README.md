@@ -39,6 +39,34 @@ server/index.js      HTTP + WebSocket
 server/rooms.js      room membership and op history
 ```
 
+## Architecture
+
+```mermaid
+flowchart TB
+  ta["textarea"]
+  ta --> diff["diffText"]
+  diff --> rga["rga.js"]
+  rga --> log["oplog.js"]
+  rga --> undo["undo.js"]
+  undo --> rga
+  log --> conn["connection.js"]
+
+  conn --> ops["ops"]
+  conn --> pres["presence"]
+  conn --> recon["reconnect"]
+
+  ops --> srv["server/index.js"]
+  pres --> srv
+  recon --> wel["welcome, then pending flush"]
+  wel --> rga
+
+  srv --> rooms["rooms.js"]
+  rooms --> hist["in-memory op log"]
+  rooms --> fan["other clients in the room"]
+  fan --> rga
+  rga --> ta
+```
+
 ## Design
 
 Each character is a node `{id, ch, origin}`. `id` is a Lamport timestamp
@@ -83,9 +111,9 @@ Each inverse is a new op. The stack is local to a replica.
 applies it, then resends ops that have not been acknowledged. Acknowledgements
 are matched by op id.
 
-**Relay.** `server/` appends well-formed JSON (an object with an `id`) to a
-per-room list and forwards it. It does not merge, order, or transform
-operations. Empty rooms are discarded after 10 minutes. State is in memory.
+**Relay.** `server/` appends ops whose `id` has a numeric `counter` and a
+non-empty `replica` string. It does not merge, order, or transform them. Empty
+rooms are discarded after 10 minutes. State is in memory.
 
 ## Protocol
 
@@ -160,25 +188,6 @@ classDiagram
   Connection --> OpLog
 ```
 
-```mermaid
-sequenceDiagram
-  participant UI as textarea
-  participant RGA
-  participant Log as OpLog
-  participant C as Connection
-  participant S as Rooms
-  participant P as peer
-
-  UI->>RGA: diff -> localInsert / localDelete
-  RGA-->>Log: append(op, local)
-  C->>S: ops
-  S-->>C: ack(ids)
-  C->>Log: ack by id
-  S-->>P: ops
-  P->>RGA: applyMany
-  P->>UI: render
-```
-
 ## Tests
 
 `npm test` (57 cases):
@@ -200,4 +209,5 @@ sequenceDiagram
 
 ## Deploy
 
-`render.yaml` starts `node server/index.js` on `$PORT`. Health check: `/healthz`.
+`render.yaml` runs `npm start` (`node server/index.js`) on `$PORT`. Health check:
+`/healthz`.
