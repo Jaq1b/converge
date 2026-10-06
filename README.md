@@ -5,7 +5,6 @@ sequence CRDT implemented in this repository (not Yjs or Automerge). The server
 is a WebSocket relay; it does not interpret operations.
 
 Demo: https://converge-yok8.onrender.com  
-Source: https://github.com/Jaq1b/converge
 
 The demo host sleeps when idle. The first request after that can take about a
 minute.
