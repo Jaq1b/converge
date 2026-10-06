@@ -33,7 +33,7 @@ function idKey(id) {
 export class UndoManager {
   /**
    * @param {object} options
-   * @param {import('./crdt/rga.js').RGA} options.doc
+   * @param {import('../crdt/rga.js').RGA} options.doc
    * @param {(ops: object[]) => void} options.onOps  publish ops undo generates
    * @param {() => number} [options.now]             injectable clock, for tests
    */

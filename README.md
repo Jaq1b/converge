@@ -1,6 +1,7 @@
 # Converge
 
-**Live demo:** [Instant version](https://jaq1b.github.io/converge/) · [Multi-user version](https://converge-yok8.onrender.com) (first load may take up to a minute)
+**Live demo:** https://converge-yok8.onrender.com
+(first load may take up to a minute if the service was sleeping)
 
 A real-time collaborative plain-text editor. Several people type in the same
 document at once, go offline, come back, and everyone ends up with identical text.
@@ -15,16 +16,16 @@ npm test           # 57 tests
 
 ## What everything does
 
-The browser client lives in `docs/`, the relay in `server/`, and the merge engine
-in `docs/crdt/`, which both of the others import.
+The merge engine lives in `crdt/`, the browser client in `client/`, the relay in
+`server/`.
 
-- **CRDT** (`docs/crdt/rga.js`): a flat array of character nodes, each with a Lamport
+- **CRDT** (`crdt/rga.js`): a flat array of character nodes, each with a Lamport
   id and an anchor saying which character it was inserted after. One insertion
   scan resolves concurrent edits. Deletes are logical. ~350 lines, no deps.
-- **Op log** (`docs/crdt/oplog.js`): every local edit is appended and held in an outbox
+- **Op log** (`crdt/oplog.js`): every local edit is appended and held in an outbox
   until the server acknowledges it. Acks are matched by operation id, never by
   count or position, since they can arrive twice or out of order.
-- **Undo** (`docs/undo.js`): stores operation ids and undoes by emitting inverse
+- **Undo** (`client/undo.js`): stores operation ids and undoes by emitting inverse
   operations, so it stays correct while other people are editing.
 - **Relay** (`server/`): keeps an append-only list of opaque JSON per room,
   replays it to whoever joins, forwards new ops to everyone else. It never parses

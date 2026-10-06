@@ -6,15 +6,15 @@
  * `npm test` behave.
  */
 
-import { tests as rgaTests } from '../docs/crdt/rga.test.js';
-import { tests as oplogTests } from '../docs/crdt/oplog.test.js';
-import { tests as undoTests } from '../docs/undo.test.js';
+import { tests as rgaTests } from '../crdt/rga.test.js';
+import { tests as oplogTests } from '../crdt/oplog.test.js';
+import { tests as undoTests } from '../client/undo.test.js';
 import { tests as relayTests } from '../server/relay.test.js';
 
 const suites = [
-  ['docs/crdt/rga.js', rgaTests],
-  ['docs/crdt/oplog.js', oplogTests],
-  ['docs/undo.js', undoTests],
+  ['crdt/rga.js', rgaTests],
+  ['crdt/oplog.js', oplogTests],
+  ['client/undo.js', undoTests],
   ['server/relay.js (end-to-end)', relayTests],
 ];
 

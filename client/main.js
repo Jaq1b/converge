@@ -12,8 +12,8 @@
  * talk to the DOM, and never stored or sent.
  */
 
-import { RGA } from './crdt/rga.js';
-import { OpLog } from './crdt/oplog.js';
+import { RGA } from '../crdt/rga.js';
+import { OpLog } from '../crdt/oplog.js';
 import { Connection, Status } from './connection.js';
 import { UndoManager } from './undo.js';
 
